@@ -17,7 +17,10 @@ export type BotConfig = {
   telegramBotToken: string | null;
   httpPort: number;
   corsOrigin: string;
-  /** Public HTTPS URL of the Mini App (optional deep-link hint in /single). */
+  /**
+   * Public HTTPS URL of the Mini App (WebApp menu button + inline buttons).
+   * Telegram Bot API rejects non-HTTPS web_app URLs in production clients.
+   */
   miniappUrl: string | null;
   /**
    * Championship open days of month (1–31). Stub override via CHAMPIONSHIP_OPEN_DAYS

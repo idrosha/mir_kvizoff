@@ -20,6 +20,14 @@ npm run web:dev               # :5174
 
 Optional bot UX: set `TELEGRAM_BOT_TOKEN` or `TELEGRAM_BOT_TOKEN_MQ` in root `.env` (env only — never commit) and restart `bot:dev`.
 
+### Telegram Mini App via bot (Andrew)
+
+1. Put `TELEGRAM_BOT_TOKEN_MQ` (or `TELEGRAM_BOT_TOKEN`) in root `.env` / Cursor Environment secrets — never paste into chat.
+2. Serve Mini App over **HTTPS** and set `MINIAPP_URL` to that URL (Telegram rejects plain `http://` for WebApp buttons). Local browser smoke can stay on `http://127.0.0.1:5173` without the bot.
+3. `npm run bot:dev` + `npm run miniapp:dev` (tunnel → `MINIAPP_URL`).
+4. In Telegram: `/start` → inline **Открыть Мир Квизов**; chat menu button **Играть**; `/single` → map, `/online` → mode picker, `/championship`, `/shop`, `/account`, `/settings`, `/leaders`.
+5. Inside Mini App, confirm hub → map/solo, online 1v1, party open/closed (host live results), shop, championship, profile.
+
 ---
 
 ## Single player (10 countries, timer, block gate)
@@ -61,10 +69,12 @@ Optional bot UX: set `TELEGRAM_BOT_TOKEN` or `TELEGRAM_BOT_TOKEN_MQ` in root `.e
 - [ ] **Настройки**: language + sound persist (server + local StoragePort cache)
 - [ ] Avatar remains visible across single / online / championship
 
-## Bot `/start`
+## Bot `/start` + WebApp entry
 
-- [ ] With `TELEGRAM_BOT_TOKEN` or `TELEGRAM_BOT_TOKEN_MQ` set: send `/start` → bot replies with menu / deep-link to miniapp (no token in logs or repo)
+- [ ] With `TELEGRAM_BOT_TOKEN` / `TELEGRAM_BOT_TOKEN_MQ` **and** HTTPS `MINIAPP_URL`: `/start` shows inline WebApp button; chat menu **Играть** opens Mini App
+- [ ] Commands `/single` `/online` `/championship` `/leaders` `/shop` `/account` `/settings` open Mini App (not «Скоро»)
 - [ ] Without token: API-only mode still serves `/health` and client stub auth (`demo:…`)
+- [ ] Without `MINIAPP_URL`: commands explain how to set it; no WebApp keyboard
 
 ## Phase 8 shells (smoke)
 
