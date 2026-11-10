@@ -15,6 +15,8 @@ export type TelegramWebAppInitDataUnsafe = {
   query_id?: string;
   auth_date?: number;
   hash?: string;
+  /** From `t.me/<bot>/<app>?startapp=<param>` deep links. */
+  start_param?: string;
 };
 
 export type TelegramHapticFeedback = {

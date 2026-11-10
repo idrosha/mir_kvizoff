@@ -62,8 +62,24 @@ npm run web:dev
 ```bash
 export VITE_API_BASE_URL=http://127.0.0.1:8787
 npm run miniapp:dev
-# открыть http://127.0.0.1:5173
+# открыть http://127.0.0.1:5173  (браузерный демо-режим без Telegram)
 ```
+
+#### Тест из Telegram-бота (`TELEGRAM_BOT_TOKEN_MQ`)
+
+1. В корневом `.env` (или в секретах Cursor Environment) задайте:
+   - `TELEGRAM_BOT_TOKEN_MQ=<токен бота>` — либо `TELEGRAM_BOT_TOKEN`
+   - `MINIAPP_URL=https://…` — **публичный HTTPS** URL Mini App (Bot API не принимает `http://` для `web_app`)
+   - `CORS_ORIGIN=*` (или origin вашего Mini App)
+2. Поднимите API+бот: `npm run bot:dev`
+3. Поднимите Mini App и пробросьте HTTPS-туннель на Vite, например:
+   ```bash
+   npm run miniapp:dev
+   # в другом терминале: ngrok http 5173
+   # затем MINIAPP_URL=https://….ngrok-free.app и перезапуск bot:dev
+   ```
+4. В чате с ботом: `/start` → кнопка **«Открыть Мир Квизов»**; меню чата **«Играть»**; команды `/single`, `/online`, `/shop`, … открывают Mini App с `?screen=`.
+5. Токен **никогда** не коммитить и не вставлять в чат — только `.env` / Cursor secret `TELEGRAM_BOT_TOKEN_MQ`.
 
 ### 4) Capacitor Android shell (Phase 8)
 

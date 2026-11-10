@@ -50,6 +50,44 @@ type Route =
   | { name: "championship-result"; run: ChampionshipRunDto }
   | { name: "stub"; title: string };
 
+/** Deep-link from bot WebApp URL `?screen=` or Telegram `start_param`. */
+function resolveInitialRoute(): Route {
+  if (typeof window === "undefined") {
+    return { name: "menu" };
+  }
+  const params = new URLSearchParams(window.location.search);
+  const fromQuery = params.get("screen")?.trim().toLowerCase() ?? "";
+  const fromTg =
+    window.Telegram?.WebApp?.initDataUnsafe?.start_param?.trim().toLowerCase() ??
+    "";
+  const raw = fromQuery || fromTg;
+  switch (raw) {
+    case "map":
+    case "single":
+    case "solo":
+      return { name: "map" };
+    case "online":
+      return { name: "online-mode" };
+    case "party":
+      return { name: "party-hub" };
+    case "championship":
+    case "cup":
+      return { name: "championship-lobby" };
+    case "leaders":
+    case "leaderboard":
+      return { name: "leaders" };
+    case "shop":
+      return { name: "shop" };
+    case "account":
+    case "profile":
+      return { name: "account" };
+    case "settings":
+      return { name: "settings" };
+    default:
+      return { name: "menu" };
+  }
+}
+
 type Props = {
   boot: AppBootstrap;
 };
@@ -67,7 +105,7 @@ export function App({ boot }: Props) {
     storage,
     player,
   } = boot;
-  const [route, setRoute] = useState<Route>({ name: "menu" });
+  const [route, setRoute] = useState<Route>(() => resolveInitialRoute());
   const [progress, setProgress] = useState(() => engine.getProgress());
   const [avatar, setAvatar] = useState(() => engine.getAvatar());
   const [totalPoints, setTotalPoints] = useState(0);

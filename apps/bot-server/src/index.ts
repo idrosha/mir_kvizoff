@@ -41,8 +41,12 @@ async function main(): Promise<void> {
     return;
   }
 
-  const bot = createBot({ token: config.telegramBotToken, ports });
-  await registerBotCommands(bot);
+  const bot = createBot({
+    token: config.telegramBotToken,
+    ports,
+    miniappUrl: config.miniappUrl,
+  });
+  await registerBotCommands(bot, { miniappUrl: config.miniappUrl });
 
   console.log("Мир Квизов bot-server starting (long polling)…");
   await bot.start({
@@ -50,6 +54,13 @@ async function main(): Promise<void> {
       console.log(
         "Bot is running. Token from TELEGRAM_BOT_TOKEN or TELEGRAM_BOT_TOKEN_MQ (root .env).",
       );
+      if (config.miniappUrl) {
+        console.log("MINIAPP_URL:", config.miniappUrl);
+      } else {
+        console.log(
+          "MINIAPP_URL not set — /start and commands will not show WebApp buttons.",
+        );
+      }
     },
   });
 }

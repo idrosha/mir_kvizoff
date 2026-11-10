@@ -10,6 +10,7 @@ interface ImportMeta {
 
 type TelegramWebApp = {
   initData: string;
+  initDataUnsafe?: { start_param?: string };
   ready(): void;
   expand(): void;
 };
