@@ -85,7 +85,7 @@ export function PlayScreen({
   }
 
   return (
-    <AppShell title="Vopros" coins={totalPoints} hideNav>
+    <AppShell title="Вопрос" coins={totalPoints} hideNav>
       <section
         className="screen play-screen no-nav"
         key={questionKey(question, state.questionIndex)}

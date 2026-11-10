@@ -44,7 +44,7 @@ export function SettingsScreen({
 
   return (
     <AppShell
-      title="Nastroiki"
+      title="Настройки"
       coins={account.totalPoints}
       active="account"
       onNavigate={onNavigate}

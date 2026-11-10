@@ -72,7 +72,7 @@ export function OnlineLobbyScreen({
 
   return (
     <AppShell
-      title="Duel"
+      title="Дуэль"
       coins={totalPoints}
       active="menu"
       onNavigate={onNavigate}

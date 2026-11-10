@@ -92,7 +92,7 @@ export function ChampionshipLobbyScreen({
 
   if (!status) {
     return (
-      <AppShell title="Kubok" coins={totalPoints} active="championship" onNavigate={onNavigate}>
+      <AppShell title="Кубок" coins={totalPoints} active="championship" onNavigate={onNavigate}>
         <section className="screen">
           <p>Загрузка чемпионата…</p>
           {error ? <p className="error-banner">{error}</p> : null}
@@ -108,7 +108,7 @@ export function ChampionshipLobbyScreen({
 
   return (
     <AppShell
-      title="Kubok"
+      title="Кубок"
       coins={totalPoints}
       active="championship"
       onNavigate={onNavigate}

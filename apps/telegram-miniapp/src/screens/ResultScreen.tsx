@@ -31,7 +31,7 @@ export function ResultScreen({
 
   return (
     <AppShell
-      title="Itogi"
+      title="Итоги"
       coins={totalPoints}
       active="map"
       onNavigate={onNavigate}

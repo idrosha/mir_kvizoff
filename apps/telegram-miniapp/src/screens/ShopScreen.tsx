@@ -103,7 +103,7 @@ export function ShopScreen({
 
   return (
     <AppShell
-      title="Magazin"
+      title="Магазин"
       coins={account.totalPoints}
       active="shop"
       onNavigate={onNavigate}

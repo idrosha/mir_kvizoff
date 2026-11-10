@@ -93,7 +93,7 @@ export function MenuScreen({
 
   return (
     <AppShell
-      title="Glavnaya"
+      title="Главная"
       coins={totalPoints}
       active="menu"
       onNavigate={onNavigate}

@@ -73,7 +73,7 @@ export function MapScreen({
 
   return (
     <AppShell
-      title="Karta"
+      title="Карта"
       coins={totalPoints}
       active="map"
       onNavigate={onNavigate}

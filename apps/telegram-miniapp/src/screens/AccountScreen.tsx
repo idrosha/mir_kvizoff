@@ -47,7 +47,7 @@ export function AccountScreen({
 
   return (
     <AppShell
-      title="Profil"
+      title="Профиль"
       coins={account.totalPoints}
       active="account"
       onNavigate={onNavigate}
