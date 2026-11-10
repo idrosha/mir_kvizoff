@@ -66,6 +66,14 @@ export type AccountSnapshot = {
   };
 };
 
+export type LeaderboardEntry = {
+  playerId: string;
+  displayName?: string;
+  onlineRating: number;
+  totalPoints: number;
+  levelsCompleted: number;
+};
+
 export type ProgressStore = {
   getOrCreate(playerId: string, displayName?: string): PlayerSave;
   commitRun(playerId: string, result: LevelRunResult): PlayerSave;
@@ -84,6 +92,8 @@ export type ProgressStore = {
   getOnlineRating(playerId: string): number;
   setOnlineRating(playerId: string, rating: number): PlayerSave;
   snapshot(playerId: string): AccountSnapshot;
+  /** Online rating ladder for the Leaders screen (server source of truth). */
+  listLeaderboard(limit?: number): LeaderboardEntry[];
 };
 
 const DEFAULT_AVATAR: AvatarLoadout = {
@@ -322,6 +332,30 @@ export function createInMemoryProgressStore(nowMs: () => number = () => Date.now
     },
     snapshot(playerId) {
       return toSnapshot(getOrCreate(playerId));
+    },
+    listLeaderboard(limit = 20) {
+      const capped = Math.max(1, Math.min(100, Math.floor(limit)));
+      const rows: LeaderboardEntry[] = [];
+      for (const save of byPlayer.values()) {
+        const stats = computeStats(save.progress);
+        rows.push({
+          playerId: save.playerId,
+          displayName: save.displayName,
+          onlineRating: save.onlineRating,
+          totalPoints: save.totalPoints,
+          levelsCompleted: stats.levelsCompleted,
+        });
+      }
+      rows.sort((a, b) => {
+        if (b.onlineRating !== a.onlineRating) {
+          return b.onlineRating - a.onlineRating;
+        }
+        if (b.totalPoints !== a.totalPoints) {
+          return b.totalPoints - a.totalPoints;
+        }
+        return a.playerId.localeCompare(b.playerId);
+      });
+      return rows.slice(0, capped);
     },
   };
 }

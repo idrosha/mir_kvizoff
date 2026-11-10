@@ -47,18 +47,18 @@ export function OnlineLobbyScreen({
     return () => window.clearInterval(id);
   }, [busy]);
 
-  async function findMatch(): Promise<void> {
+  async function findMatch(mode: "stub-bot" | "queue-human"): Promise<void> {
     setBusy(true);
     setError(null);
-    setStatus("Поиск соперника…");
+    setStatus(mode === "stub-bot" ? "Поиск соперника (бот)…" : "Очередь 1v1…");
     try {
-      const result = await onlineApi.queue(playerId, "stub-bot");
+      const result = await onlineApi.queue(playerId, mode);
       if (result.status === "matched" && result.match) {
         setStatus("Матч найден");
         onMatched(result.match);
         return;
       }
-      setStatus("В очереди — ждём второго игрока");
+      setStatus("В очереди — ждём второго игрока (обновите / нажмите снова со второго клиента)");
     } catch (err) {
       setError(err instanceof Error ? err.message : String(err));
       setStatus(null);
@@ -161,9 +161,17 @@ export function OnlineLobbyScreen({
             type="button"
             className="btn btn-block"
             disabled={busy}
-            onClick={() => void findMatch()}
+            onClick={() => void findMatch("stub-bot")}
           >
-            {busy ? "Ищем…" : "Найти матч"}
+            {busy ? "Ищем…" : "Найти матч (бот)"}
+          </button>
+          <button
+            type="button"
+            className="btn-secondary btn-block"
+            disabled={busy}
+            onClick={() => void findMatch("queue-human")}
+          >
+            Очередь 1v1 (человек)
           </button>
           <button
             type="button"
@@ -172,7 +180,7 @@ export function OnlineLobbyScreen({
             disabled={busy}
           >
             <span className="ms">close</span>
-            {busy ? "Отменить поиск" : "Назад"}
+            {busy ? "Отменить поиск" : "Назад к режимам"}
           </button>
         </div>
       </section>

@@ -10,12 +10,15 @@ import {
 } from "@mir-games/game-core";
 import type { ChampionshipStore } from "../championship/store.js";
 import type { MatchStore, MatchmakingMode } from "../online/match-store.js";
+import type { PartyRoomStore } from "../online/room-store.js";
 import type { ProgressStore } from "../progress/store.js";
+import type { PartyRoomVisibility } from "@mir-games/game-core";
 
 export type HttpApiOptions = {
   port: number;
   store: ProgressStore;
   matches: MatchStore;
+  partyRooms: PartyRoomStore;
   championship: ChampionshipStore;
   /** CORS origin for the miniapp / web (e.g. http://localhost:5173). */
   corsOrigin: string;
@@ -102,7 +105,7 @@ function parsePlayerAnswer(raw: unknown): PlayerAnswer | null {
 }
 
 export function startHttpApi(options: HttpApiOptions): Promise<{ close: () => Promise<void> }> {
-  const { port, store, matches, championship, corsOrigin } = options;
+  const { port, store, matches, partyRooms, championship, corsOrigin } = options;
 
   const server = createServer(async (req, res) => {
     try {
@@ -483,6 +486,144 @@ export function startHttpApi(options: HttpApiOptions): Promise<{ close: () => Pr
           { playerId, rating: matches.getRating(playerId) },
           corsOrigin,
         );
+        return;
+      }
+
+      if (method === "POST" && url.pathname === "/api/party/create") {
+        const body = await readJson(req);
+        try {
+          const playerId = requirePlayerId(body);
+          const visibilityRaw = typeof body.visibility === "string" ? body.visibility : "";
+          if (visibilityRaw !== "open" && visibilityRaw !== "closed") {
+            sendJson(res, 400, { error: "visibility must be open or closed" }, corsOrigin);
+            return;
+          }
+          const visibility = visibilityRaw as PartyRoomVisibility;
+          const title = typeof body.title === "string" ? body.title : undefined;
+          sendJson(res, 200, partyRooms.createRoom(playerId, { visibility, title }), corsOrigin);
+        } catch (err) {
+          const message = err instanceof Error ? err.message : String(err);
+          sendJson(res, 409, { error: message }, corsOrigin);
+        }
+        return;
+      }
+
+      if (method === "GET" && url.pathname === "/api/party/open") {
+        sendJson(res, 200, { rooms: partyRooms.listOpenRooms() }, corsOrigin);
+        return;
+      }
+
+      if (method === "POST" && url.pathname === "/api/party/join") {
+        const body = await readJson(req);
+        try {
+          const playerId = requirePlayerId(body);
+          const roomId = typeof body.roomId === "string" ? body.roomId : undefined;
+          const code = typeof body.code === "string" ? body.code : undefined;
+          sendJson(res, 200, partyRooms.joinRoom(playerId, { roomId, code }), corsOrigin);
+        } catch (err) {
+          const message = err instanceof Error ? err.message : String(err);
+          const status = message.includes("not found") ? 404 : 409;
+          sendJson(res, status, { error: message }, corsOrigin);
+        }
+        return;
+      }
+
+      if (method === "POST" && url.pathname === "/api/party/leave") {
+        const body = await readJson(req);
+        try {
+          const playerId = requirePlayerId(body);
+          const roomId = typeof body.roomId === "string" ? body.roomId : "";
+          if (!roomId) {
+            sendJson(res, 400, { error: "roomId required" }, corsOrigin);
+            return;
+          }
+          sendJson(res, 200, partyRooms.leaveRoom(playerId, roomId), corsOrigin);
+        } catch (err) {
+          const message = err instanceof Error ? err.message : String(err);
+          sendJson(res, 409, { error: message }, corsOrigin);
+        }
+        return;
+      }
+
+      if (method === "GET" && url.pathname === "/api/party/room") {
+        const roomId = url.searchParams.get("roomId");
+        const playerId = url.searchParams.get("playerId");
+        if (!roomId || !playerId) {
+          sendJson(res, 400, { error: "roomId and playerId required" }, corsOrigin);
+          return;
+        }
+        try {
+          sendJson(res, 200, partyRooms.getRoom(roomId, playerId), corsOrigin);
+        } catch (err) {
+          const message = err instanceof Error ? err.message : String(err);
+          sendJson(res, 404, { error: message }, corsOrigin);
+        }
+        return;
+      }
+
+      if (method === "POST" && url.pathname === "/api/party/start") {
+        const body = await readJson(req);
+        try {
+          const playerId = requirePlayerId(body);
+          const roomId = typeof body.roomId === "string" ? body.roomId : "";
+          if (!roomId) {
+            sendJson(res, 400, { error: "roomId required" }, corsOrigin);
+            return;
+          }
+          sendJson(res, 200, partyRooms.startRoom(playerId, roomId), corsOrigin);
+        } catch (err) {
+          const message = err instanceof Error ? err.message : String(err);
+          sendJson(res, 409, { error: message }, corsOrigin);
+        }
+        return;
+      }
+
+      if (method === "POST" && url.pathname === "/api/party/advance") {
+        const body = await readJson(req);
+        try {
+          const playerId = requirePlayerId(body);
+          const roomId = typeof body.roomId === "string" ? body.roomId : "";
+          if (!roomId) {
+            sendJson(res, 400, { error: "roomId required" }, corsOrigin);
+            return;
+          }
+          sendJson(res, 200, partyRooms.advanceRound(playerId, roomId), corsOrigin);
+        } catch (err) {
+          const message = err instanceof Error ? err.message : String(err);
+          sendJson(res, 409, { error: message }, corsOrigin);
+        }
+        return;
+      }
+
+      if (method === "POST" && url.pathname === "/api/party/answer") {
+        const body = await readJson(req);
+        try {
+          const playerId = requirePlayerId(body);
+          const roomId = typeof body.roomId === "string" ? body.roomId : "";
+          const roundIndex = typeof body.roundIndex === "number" ? body.roundIndex : -1;
+          if (!roomId || roundIndex < 0) {
+            sendJson(res, 400, { error: "roomId and roundIndex required" }, corsOrigin);
+            return;
+          }
+          const answer = parsePlayerAnswer(body.answer ?? null);
+          sendJson(
+            res,
+            200,
+            partyRooms.submitAnswer(playerId, roomId, roundIndex, answer),
+            corsOrigin,
+          );
+        } catch (err) {
+          const message = err instanceof Error ? err.message : String(err);
+          const status = message.includes("not found") ? 404 : 409;
+          sendJson(res, status, { error: message }, corsOrigin);
+        }
+        return;
+      }
+
+      if (method === "GET" && url.pathname === "/api/leaders") {
+        const limitRaw = url.searchParams.get("limit");
+        const limit = limitRaw ? Number(limitRaw) : 20;
+        sendJson(res, 200, { entries: store.listLeaderboard(Number.isFinite(limit) ? limit : 20) }, corsOrigin);
         return;
       }
 

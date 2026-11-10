@@ -4,6 +4,7 @@ import { createBot, registerBotCommands } from "./bot.js";
 import { createStubPorts } from "./ports/stubs.js";
 import { createInMemoryProgressStore } from "./progress/store.js";
 import { createInMemoryMatchStore } from "./online/match-store.js";
+import { createInMemoryPartyRoomStore } from "./online/room-store.js";
 import { createInMemoryChampionshipStore } from "./championship/store.js";
 import { startHttpApi } from "./api/http.js";
 import { setMiniappUrl } from "./handlers/menu.js";
@@ -14,6 +15,7 @@ async function main(): Promise<void> {
   const ports = createStubPorts();
   const store = createInMemoryProgressStore();
   const matches = createInMemoryMatchStore({ progress: store });
+  const partyRooms = createInMemoryPartyRoomStore({ progress: store });
   const championship = createInMemoryChampionshipStore({
     progress: store,
     config: createChampionshipConfig({
@@ -27,6 +29,7 @@ async function main(): Promise<void> {
     port: config.httpPort,
     store,
     matches,
+    partyRooms,
     championship,
     corsOrigin: config.corsOrigin,
   });

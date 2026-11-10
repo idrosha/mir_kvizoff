@@ -18,6 +18,8 @@ export {
   createProgressApiClient,
   createShopApiClient,
   createOnlineApiClient,
+  createPartyApiClient,
+  createLeadersApiClient,
   createChampionshipApiClient,
 } from "@mir-games/adapters-web";
 export type {
@@ -27,6 +29,11 @@ export type {
   OnlineApiClient,
   OnlineMatchPublicDto,
   OnlineQueueResponse,
+  PartyApiClient,
+  PartyRoomPublicDto,
+  PartyRoomSummaryDto,
+  LeadersApiClient,
+  LeaderboardEntryDto,
   ChampionshipApiClient,
   ChampionshipRunDto,
   ChampionshipStatusDto,
