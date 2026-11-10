@@ -1,0 +1,57 @@
+/* TV / leanback: large UI, overscan safe zones, focus rings for dpad. */
+
+:root {
+  --tv-safe-top: 5%;
+  --tv-safe-right: 5%;
+  --tv-safe-bottom: 5%;
+  --tv-safe-left: 5%;
+  --tv-focus: #f0c14b;
+  --tv-font-scale: 1.35;
+}
+
+.tv-shell {
+  min-height: 100dvh;
+  padding: var(--tv-safe-top) var(--tv-safe-right) var(--tv-safe-bottom) var(--tv-safe-left);
+  box-sizing: border-box;
+}
+
+.tv-platform-tag {
+  margin-top: 0.75rem;
+  font-size: 1rem;
+  letter-spacing: 0.02em;
+}
+
+.tv-shell .screen {
+  max-width: 960px;
+  font-size: calc(1rem * var(--tv-font-scale));
+}
+
+.tv-shell .brand-header h1,
+.tv-shell .screen h1 {
+  font-size: clamp(2.2rem, 4vw, 3.2rem);
+}
+
+.tv-shell .brand {
+  font-size: 1.05rem;
+}
+
+.tv-shell button,
+.tv-shell .menu-list button,
+.tv-shell .choice-btn,
+.tv-shell .primary-btn {
+  min-height: 3.5rem;
+  font-size: 1.15rem;
+  padding: 0.85rem 1.25rem;
+}
+
+.tv-shell [data-tv-focusable]:focus,
+.tv-shell [data-tv-focusable]:focus-visible {
+  outline: 4px solid var(--tv-focus);
+  outline-offset: 4px;
+}
+
+.tv-shell .avatar-view,
+.tv-shell .timer-bar {
+  transform: scale(1.15);
+  transform-origin: left center;
+}

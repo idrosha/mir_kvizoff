@@ -1,0 +1,13 @@
+{
+  "name": "@mir-games/quiz-ui",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Shared Stitch travel-quiz design tokens and styles for Мир Квизов",
+  "type": "module",
+  "exports": {
+    "./styles.css": "./styles.css"
+  },
+  "files": [
+    "styles.css"
+  ]
+}

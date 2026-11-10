@@ -1,0 +1,28 @@
+{
+  "name": "@mir-games/platform-contracts",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Platform port interfaces for Мир Квизов (adapters implement; game-core depends)",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "devDependencies": {
+    "typescript": "^5.8.2"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

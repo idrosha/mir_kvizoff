@@ -1,0 +1,39 @@
+# Dependencies
+node_modules/
+
+# Build
+dist/
+build/
+*.tsbuildinfo
+
+# Generated from content/question-bank (npm run generate -w @mir-games/question-bank)
+packages/question-bank/src/bank-data.ts
+
+# Environment / secrets — never commit real tokens
+.env
+.env.local
+.env.*.local
+
+# Logs & OS
+*.log
+npm-debug.log*
+.DS_Store
+Thumbs.db
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Coverage / test
+coverage/
+.nyc_output/
+
+# Capacitor / Android (generated locally — never commit signing keys)
+apps/mobile-capacitor/android/
+apps/mobile-capacitor/ios/
+*.jks
+*.keystore
+local.properties
+.capacitor/

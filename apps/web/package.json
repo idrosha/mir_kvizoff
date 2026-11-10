@@ -1,0 +1,32 @@
+{
+  "name": "@mir-games/web",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Browser web thin client for Мир Квизов",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -p tsconfig.json --noEmit && vite build",
+    "preview": "vite preview",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "dependencies": {
+    "@mir-games/adapters-web": "0.1.0",
+    "@mir-games/game-core": "0.1.0",
+    "@mir-games/platform-contracts": "0.1.0",
+    "@mir-games/question-bank": "0.1.0",
+    "@mir-games/quiz-ui": "0.1.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  },
+  "devDependencies": {
+    "@types/react": "^19.0.10",
+    "@types/react-dom": "^19.0.4",
+    "@vitejs/plugin-react": "^4.3.4",
+    "typescript": "^5.8.2",
+    "vite": "^6.2.0"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

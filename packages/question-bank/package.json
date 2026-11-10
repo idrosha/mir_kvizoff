@@ -1,0 +1,34 @@
+{
+  "name": "@mir-games/question-bank",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Single-player question bank (block 1) adapted for game-core",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "generate": "node ./scripts/embed-bank.mjs",
+    "build": "npm run generate && tsc -p tsconfig.json",
+    "typecheck": "npm run generate && tsc -p tsconfig.json --noEmit",
+    "test": "npm run build -w @mir-games/platform-contracts && npm run build -w @mir-games/game-core && npm run generate && node --import tsx --test src/**/*.test.ts"
+  },
+  "dependencies": {
+    "@mir-games/game-core": "0.1.0"
+  },
+  "devDependencies": {
+    "tsx": "^4.19.3",
+    "typescript": "^5.8.2"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

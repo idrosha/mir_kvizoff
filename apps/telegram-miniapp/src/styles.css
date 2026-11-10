@@ -1,0 +1,2 @@
+/* App-local entry — shared Stitch design system lives in @mir-games/quiz-ui */
+@import "@mir-games/quiz-ui/styles.css";
