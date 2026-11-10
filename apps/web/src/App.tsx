@@ -4,6 +4,7 @@ import type {
   AccountSnapshotDto,
   ChampionshipRunDto,
   OnlineMatchPublicDto,
+  PartyRoomPublicDto,
 } from "@mir-games/adapters-web";
 import type { AppBootstrap } from "./bootstrap";
 import type { NavTab } from "./components/AppShell";
@@ -16,9 +17,14 @@ import { StubScreen } from "./screens/StubScreen";
 import { ShopScreen } from "./screens/ShopScreen";
 import { AccountScreen } from "./screens/AccountScreen";
 import { SettingsScreen } from "./screens/SettingsScreen";
+import { OnlineModeScreen } from "./screens/OnlineModeScreen";
 import { OnlineLobbyScreen } from "./screens/OnlineLobbyScreen";
 import { OnlineMatchScreen } from "./screens/OnlineMatchScreen";
 import { OnlineResultScreen } from "./screens/OnlineResultScreen";
+import { PartyHubScreen } from "./screens/PartyHubScreen";
+import { PartyRoomScreen } from "./screens/PartyRoomScreen";
+import { PartyResultScreen } from "./screens/PartyResultScreen";
+import { LeadersScreen } from "./screens/LeadersScreen";
 import { ChampionshipLobbyScreen } from "./screens/ChampionshipLobbyScreen";
 import { ChampionshipRunScreen } from "./screens/ChampionshipRunScreen";
 import { ChampionshipResultScreen } from "./screens/ChampionshipResultScreen";
@@ -31,17 +37,18 @@ type Route =
   | { name: "shop" }
   | { name: "account" }
   | { name: "settings" }
+  | { name: "leaders" }
+  | { name: "online-mode" }
   | { name: "online-lobby" }
   | { name: "online-match"; match: OnlineMatchPublicDto }
   | { name: "online-result"; match: OnlineMatchPublicDto }
+  | { name: "party-hub" }
+  | { name: "party-room"; room: PartyRoomPublicDto }
+  | { name: "party-result"; room: PartyRoomPublicDto }
   | { name: "championship-lobby" }
   | { name: "championship-run"; run: ChampionshipRunDto }
   | { name: "championship-result"; run: ChampionshipRunDto }
   | { name: "stub"; title: string };
-
-const STUB_TITLES: Record<string, string> = {
-  leaders: "Лидеры",
-};
 
 type Props = {
   boot: AppBootstrap;
@@ -53,6 +60,8 @@ export function App({ boot }: Props) {
     progressApi,
     shopApi,
     onlineApi,
+    partyApi,
+    leadersApi,
     championshipApi,
     payment,
     storage,
@@ -117,11 +126,15 @@ export function App({ boot }: Props) {
       return;
     }
     if (id === "online") {
-      setRoute({ name: "online-lobby" });
+      setRoute({ name: "online-mode" });
       return;
     }
     if (id === "championship") {
       setRoute({ name: "championship-lobby" });
+      return;
+    }
+    if (id === "leaders") {
+      setRoute({ name: "leaders" });
       return;
     }
     if (id === "shop") {
@@ -136,7 +149,7 @@ export function App({ boot }: Props) {
       setRoute({ name: "settings" });
       return;
     }
-    setRoute({ name: "stub", title: STUB_TITLES[id] ?? id });
+    setRoute({ name: "stub", title: id });
   }
 
   function startLevel(levelIndex: number): void {
@@ -190,6 +203,18 @@ export function App({ boot }: Props) {
   if (route.name === "stub") {
     return <StubScreen title={route.title} onBack={() => setRoute({ name: "menu" })} />;
   }
+  if (route.name === "leaders") {
+    return <LeadersScreen leadersApi={leadersApi} onBack={() => setRoute({ name: "menu" })} />;
+  }
+  if (route.name === "online-mode") {
+    return (
+      <OnlineModeScreen
+        onOneVsOne={() => setRoute({ name: "online-lobby" })}
+        onParty={() => setRoute({ name: "party-hub" })}
+        onBack={() => setRoute({ name: "menu" })}
+      />
+    );
+  }
   if (route.name === "online-lobby") {
     return (
       <OnlineLobbyScreen
@@ -198,7 +223,7 @@ export function App({ boot }: Props) {
         onlineApi={onlineApi}
         totalPoints={totalPoints}
         onMatched={(match) => setRoute({ name: "online-match", match })}
-        onBack={() => setRoute({ name: "menu" })}
+        onBack={() => setRoute({ name: "online-mode" })}
         onNavigate={onNavigate}
       />
     );
@@ -218,6 +243,39 @@ export function App({ boot }: Props) {
       <OnlineResultScreen
         match={route.match}
         onAgain={() => setRoute({ name: "online-lobby" })}
+        onMenu={() => {
+          void refreshFromServer();
+          setRoute({ name: "menu" });
+        }}
+      />
+    );
+  }
+  if (route.name === "party-hub") {
+    return (
+      <PartyHubScreen
+        playerId={player.playerId}
+        partyApi={partyApi}
+        onEntered={(room) => setRoute({ name: "party-room", room })}
+        onBack={() => setRoute({ name: "online-mode" })}
+      />
+    );
+  }
+  if (route.name === "party-room") {
+    return (
+      <PartyRoomScreen
+        playerId={player.playerId}
+        partyApi={partyApi}
+        initialRoom={route.room}
+        onLeft={() => setRoute({ name: "party-hub" })}
+        onFinished={(room) => setRoute({ name: "party-result", room })}
+      />
+    );
+  }
+  if (route.name === "party-result") {
+    return (
+      <PartyResultScreen
+        room={route.room}
+        onAgain={() => setRoute({ name: "party-hub" })}
         onMenu={() => {
           void refreshFromServer();
           setRoute({ name: "menu" });
@@ -302,7 +360,7 @@ export function App({ boot }: Props) {
         storage={storage}
         account={account}
         onAccountChange={applyAccount}
-        onBack={() => setRoute({ name: "account" })}
+        onBack={() => setRoute({ name: "menu" })}
         onNavigate={onNavigate}
       />
     );

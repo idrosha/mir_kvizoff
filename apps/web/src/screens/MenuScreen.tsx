@@ -23,8 +23,8 @@ const ITEMS: MenuItem[] = [
   },
   {
     id: "online",
-    title: "Онлайн-дуэль",
-    subtitle: "Быстрый поиск равного соперника",
+    title: "Онлайн",
+    subtitle: "1v1 матчмейкинг или комната до 30",
     icon: "swords",
     chip: { label: "Live", tone: "live" },
   },
@@ -39,9 +39,8 @@ const ITEMS: MenuItem[] = [
   {
     id: "leaders",
     title: "Таблица лидеров",
-    subtitle: "Топ исследователей сезона",
+    subtitle: "Онлайн-рейтинг с сервера",
     icon: "leaderboard",
-    stub: true,
   },
   {
     id: "shop",
@@ -52,8 +51,14 @@ const ITEMS: MenuItem[] = [
   },
   {
     id: "account",
-    title: "Настройки и Профиль",
-    subtitle: "Статистика, имя, язык",
+    title: "Профиль",
+    subtitle: "Статистика, имя, аватар",
+    icon: "person",
+  },
+  {
+    id: "settings",
+    title: "Настройки",
+    subtitle: "Язык и звук",
     icon: "settings",
   },
 ];

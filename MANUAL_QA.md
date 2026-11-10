@@ -33,13 +33,16 @@ Optional bot UX: set `TELEGRAM_BOT_TOKEN` or `TELEGRAM_BOT_TOKEN_MQ` in root `.e
 - [ ] With block sum **≥ 1000**, next decade (11–20, …) unlocks (server is source of truth)
 - [ ] Retry of a finished level requires a shop **попытка** credit (no free replay)
 
-## Online (3 rounds)
+## Online — 1v1 + party rooms
 
-- [ ] Menu → **Онлайн** → Find match (stub opponent)
-- [ ] Match has **3 rounds** (choice / multi / free-text among them)
-- [ ] Avatar visible in lobby and match
-- [ ] Free-text round accepts typed answer; score comes from **server** (not client-trusted)
-- [ ] Result screen shows scores / rating update
+- [ ] Menu → **Онлайн** → mode picker: **1 на 1** / **Комната для компании**
+- [ ] 1v1: Find match (stub bot) or human queue; **3 rounds** (choice / multi / free-text)
+- [ ] Avatar visible in 1v1 lobby and match; free-text graded on **server**
+- [ ] Party: host creates **open** or **closed** room (max 30 players); host is **ведущий**
+- [ ] Closed join by invite code; open join from public list
+- [ ] Host dashboard shows **live** player scores; host advances rounds
+- [ ] Players answer shared rounds; result screen shows party leaderboard
+- [ ] Menu → **Лидеры** loads server online rating table
 
 ## Championship
 

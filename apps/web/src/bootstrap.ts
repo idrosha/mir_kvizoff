@@ -1,10 +1,14 @@
 import {
   createChampionshipApiClient,
+  createLeadersApiClient,
   createOnlineApiClient,
+  createPartyApiClient,
   createProgressApiClient,
   createWebAdapters,
   type ChampionshipApiClient,
+  type LeadersApiClient,
   type OnlineApiClient,
+  type PartyApiClient,
   type ProgressApiClient,
   type ShopApiClient,
 } from "@mir-games/adapters-web";
@@ -25,6 +29,8 @@ export type AppBootstrap = {
   progressApi: ProgressApiClient;
   shopApi: ShopApiClient;
   onlineApi: OnlineApiClient;
+  partyApi: PartyApiClient;
+  leadersApi: LeadersApiClient;
   championshipApi: ChampionshipApiClient;
   player: PlayerIdentity;
 };
@@ -53,6 +59,8 @@ export async function bootstrapApp(): Promise<AppBootstrap> {
 
   const progressApi = createProgressApiClient(apiBaseUrl);
   const onlineApi = createOnlineApiClient(apiBaseUrl);
+  const partyApi = createPartyApiClient(apiBaseUrl);
+  const leadersApi = createLeadersApiClient(apiBaseUrl);
   const championshipApi = createChampionshipApiClient(apiBaseUrl);
   const snapshot = await progressApi.load(player.playerId);
   const payment = adapters.createPayment(player.playerId);
@@ -78,6 +86,8 @@ export async function bootstrapApp(): Promise<AppBootstrap> {
     progressApi,
     shopApi: adapters.shopApi,
     onlineApi,
+    partyApi,
+    leadersApi,
     championshipApi,
     player,
   };

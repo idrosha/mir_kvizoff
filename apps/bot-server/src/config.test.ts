@@ -43,6 +43,6 @@ describe("loadConfig", () => {
 describe("monorepoRoot", () => {
   it("resolves to a directory that contains package.json workspaces root marker", () => {
     const root = monorepoRoot();
-    assert.match(root, /mir_games$/);
+    assert.match(root, /mir_(games|kvizoff)$/);
   });
 });

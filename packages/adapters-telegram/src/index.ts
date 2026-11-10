@@ -35,6 +35,17 @@ export type {
   OnlineQueueResponse,
 } from "./online-client.js";
 
+export { createPartyApiClient } from "./party-client.js";
+export type {
+  PartyApiClient,
+  PartyPlayerPublicDto,
+  PartyRoomPublicDto,
+  PartyRoomSummaryDto,
+} from "./party-client.js";
+
+export { createLeadersApiClient } from "./leaders-client.js";
+export type { LeadersApiClient, LeaderboardEntryDto } from "./leaders-client.js";
+
 export { createChampionshipApiClient } from "./championship-client.js";
 export type {
   ChampionshipApiClient,
